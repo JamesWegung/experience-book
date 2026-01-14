@@ -47,7 +47,7 @@
     <script>
         async function generateTelegramToken() {
             try {
-                const response = await fetch('/experience-book/public/api/telegram/generate-token', {
+                const response = await fetch('/api/telegram/generate-token', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
