@@ -4,5 +4,16 @@
     "Profile": "Профиль",
     "Dashboard": "Панель управления",
     "You're logged in!": "Вы авторизованы!",
-    "Confirm": "Подтвердить"
+    "Confirm": "Подтвердить",
+    "Profile Information": "Информация о профиле",
+    "Name": "Имя",
+    "Save": "Сохранить",
+    "Saved": "Сохранено",
+    "Update Password": "Смена пароля",
+    "Ensure your account is using a long, random password to stay secure.": "Убедитесь, что вы используете сложный пароль",
+    "Current Password": "Текущий пароль",
+    "New Password": "Новый пароль",
+    "Confirm Password": "Повторите новый пароль",
+    "Delete Account": "qwe",
+    "Save important data before deleting your account": "После удаления аккаунта все данные будут удалены навсегда. Перед удалением, пожалуйста, скачайте всю информацию, которую вы хотите сохранить."
 }
