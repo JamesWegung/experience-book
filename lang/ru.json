@@ -14,6 +14,10 @@
     "Current Password": "Текущий пароль",
     "New Password": "Новый пароль",
     "Confirm Password": "Повторите новый пароль",
-    "Delete Account": "qwe",
-    "Save important data before deleting your account": "После удаления аккаунта все данные будут удалены навсегда. Перед удалением, пожалуйста, скачайте всю информацию, которую вы хотите сохранить."
+    "Password": "Пароль",
+    "Cancel": "Отменить",
+    "Delete Account": "Удалить аккаунт",
+    "Save important data before deleting your account": "После удаления аккаунта все данные будут удалены навсегда. Перед удалением, пожалуйста, скачайте всю информацию, которую вы хотите сохранить.",
+    "Are you sure you want to delete your account?": "Вы уверены что хотите удалить свой аккаунт?",
+    "Enter your password to delete your account": "После удаления аккаунта все его данные будут удалены. Пожалуйста, введите пароль чтобы подтвердить удаление аккаунта."
 }
