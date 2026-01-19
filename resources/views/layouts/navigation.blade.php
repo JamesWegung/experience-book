@@ -17,7 +17,7 @@
                     </x-nav-link>
 
                     <x-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">
-                        My Exp
+                        {{ __('History') }}
                     </x-nav-link>
                 </div>
             </div>
