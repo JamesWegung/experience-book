@@ -8,6 +8,6 @@ class OverviewController extends Controller
 {
     public function index()
     {
-        dd('index');
+        return view('overview.index');
     }
 }
