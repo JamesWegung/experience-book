@@ -1,0 +1,24 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      COMPOSER_PATH: "/var/www/${{ secrets.SSH_USER }}/data/bin/composer"
+    steps:
+      - name: execute remote by ssh
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
+          script: |
+            cd ${{ vars.PROJECT_PATH }}
+            git pull origin master
+            ${{ vars.PHP_PATH }} ${{ env.COMPOSER_PATH }} install --no-dev --optimize-autoloader
+            ${{ vars.PHP_PATH }} artisan migrate --force
+            ${{ vars.PHP_PATH }} artisan optimize
