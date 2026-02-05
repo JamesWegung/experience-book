@@ -15,10 +15,10 @@
         <ul>
             @foreach($stats as $item)
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ $item->name }}
                     <span class="badge bg-primary rounded-pill">
                         {{ $item->amount }}
                     </span>
+                    {{ trans_choice('overview.' . $item->slug, $item->amount) }}
                 </li>
             @endforeach
         </ul>

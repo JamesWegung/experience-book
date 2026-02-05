@@ -40,10 +40,10 @@ class Event extends Model
             ->join('contents', 'events.content_id', '=', 'contents.id')
             ->join('content_types', 'contents.content_type_id', '=', 'content_types.id')
             ->select(
-                'content_types.name',
+                'content_types.slug',
                 DB::raw('count(*) as amount')
             )
-            ->groupBy('contents.content_type_id', 'content_types.name');
+            ->groupBy('contents.content_type_id', 'content_types.slug');
     }
 
 
