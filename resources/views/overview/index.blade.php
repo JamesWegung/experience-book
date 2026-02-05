@@ -9,6 +9,23 @@
         </div>
     </x-slot>
 
-    <p>Общий обзор</p>
+    <div class="m-5">
+        <p>{{ __('overview.total_list') }}</p>
+
+        <ul>
+            @foreach($stats as $item)
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ $item->name }}
+                    <span class="badge bg-primary rounded-pill">
+                        {{ $item->amount }}
+                    </span>
+                </li>
+            @endforeach
+        </ul>
+
+
+
+    </div>
+
 
 </x-app-layout>
