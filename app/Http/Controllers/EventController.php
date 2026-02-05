@@ -112,11 +112,12 @@ class EventController extends Controller
 
         try {
             DB::transaction(function () use ($validatedDataForEvent, $contentData) {
-                $content = Content::where('name', $contentData['name'])->first();
-
-                if (!$content) {
-                    $content = Content::create($contentData);
-                }
+                $content = Content::firstOrCreate(
+                    [
+                        'name' => $contentData['name'],
+                        'content_type_id' => $contentData['content_type_id']
+                    ]
+                );
 
                 $completedAt = Carbon::parse($validatedDataForEvent['completed_date']);
 
