@@ -25,11 +25,26 @@ class DatabaseSeeder extends Seeder
     private function createBasicContentTypes(): void
     {
         $data = [
-            ['name' => 'Книга'],
-            ['name' => 'Фильм'],
-            ['name' => 'Сериал'],
-            ['name' => 'Игра на ПК'],
-            ['name' => 'Мероприятие'],
+            [
+                'name' => 'Книга',
+                'slug' => 'book'
+            ],
+            [
+                'name' => 'Фильм',
+                'slug' => 'movie'
+            ],
+            [
+                'name' => 'Сериал',
+                'slug' => 'tv-series'
+            ],
+            [
+                'name' => 'Игра на ПК',
+                'slug' => 'pc-game'
+            ],
+            [
+                'name' => 'Мероприятие',
+                'slug' => 'event'
+            ],
         ];
 
         ContentType::insert($data);

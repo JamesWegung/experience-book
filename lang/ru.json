@@ -21,5 +21,9 @@
     "Are you sure you want to delete your account?": "Вы уверены что хотите удалить свой аккаунт?",
     "Enter your password to delete your account": "После удаления аккаунта все его данные будут удалены. Пожалуйста, введите пароль чтобы подтвердить удаление аккаунта.",
     "History": "История",
-    "My experience": "Мои впечатления"
+    "My experience": "Мои впечатления",
+    "Overview": "Обзор",
+    "Telegram": "Телеграм-аккаунт",
+    "Linked": "Привязан",
+    "Not linked": "Не привязан"
 }
