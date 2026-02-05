@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class OverviewController extends Controller
 {
-    public function index(Request $request)
+    public function index(): Factory|View
     {
-        $user = $request->user();
-        $stats = Event::getContentTypeStats($user->id)->get();
+        $userId = auth()->id();
+        $stats = Event::getContentTypeStats($userId)->get();
 
         return view('overview.index', compact('stats'));
     }

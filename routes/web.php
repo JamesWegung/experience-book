@@ -17,6 +17,8 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/overview', [OverviewController::class, 'index'])->name('overview.index');
 
+
+    Route::post('events/import-by-xlsx', [EventController::class, 'importByXlsx'])->name('events.importByXlsx');
     Route::resource('events', EventController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

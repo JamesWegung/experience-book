@@ -14,6 +14,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
                 </a>
+
+                <form action="{{ route('events.importByXlsx') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" name="file" class="form-control">
+                    <button type="submit" class="btn btn-primary mt-2">Загрузить Excel</button>
+                </form>
             </div>
 
             <div class="relative">

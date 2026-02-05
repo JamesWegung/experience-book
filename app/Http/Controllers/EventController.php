@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EventsImport;
 use App\Models\Content;
 use App\Models\ContentType;
 use App\Models\Event;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -129,7 +132,7 @@ class EventController extends Controller
             });
 
             return redirect()->route('events.index')->with('success', 'Запись добавлена!');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => 'Ошибка при создании записи: ' . $e->getMessage()]);
         }
 
@@ -203,7 +206,7 @@ class EventController extends Controller
             });
 
             return redirect()->route('events.index');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => 'Ошибка при создании записи: ' . $e->getMessage()]);
         }
     }
@@ -251,6 +254,38 @@ class EventController extends Controller
 
         return response()->json($suggestions);
     }
+
+
+    public function importByXlsx(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'file' => [
+                'required',
+                'file',
+                'max:5120',
+                'mimes:xlsx,xls'
+            ],
+            ], [
+            'file.required' => 'Выберите файл для загрузки.',
+            'file.mimes'    => 'Файл должен быть в формате .xlsx или .xls',
+            'file.max'      => 'Файл слишком большой (макс. 5 Мб).',
+        ]);
+
+        try {
+            $import = new EventsImport;
+            $import->import($request->file['file']);
+
+            if (count($import->failures) > 0) {
+                return back()->with('import_failures', $import->failures);
+            }
+
+            return back()->with('success', 'Все мероприятия успешно импортированы');
+        } catch (Exception $e) {
+            return back()->withErrors(['file' => 'Произошла ошибка при чтении файла: ' . $e->getMessage()]);
+        }
+    }
+
+
 
 
 }
