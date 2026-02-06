@@ -49,6 +49,7 @@ class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatch
                 'content_id' => $content->id,
                 'rating' => $row['rating'] ?? 0,
                 'review' => $row['review'] ?? null,
+                'completed_at' => date('d-m-Y H:i:s')
             ]);
         });
     }
