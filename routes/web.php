@@ -17,6 +17,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/overview', [OverviewController::class, 'index'])->name('overview.index');
 
+    Route::get('events/export-template', [EventController::class, 'downloadTemplate'])->name('events.template');
 
     Route::post('events/import-by-xlsx', [EventController::class, 'importByXlsx'])->name('events.importByXlsx');
     Route::resource('events', EventController::class);

@@ -14,6 +14,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EventController extends Controller
 {
@@ -285,6 +287,16 @@ class EventController extends Controller
         }
     }
 
+    public function downloadTemplate(): StreamedResponse
+    {
+        $path = 'templates/events_template.xlsx';
+
+        if (!Storage::disk('public')->exists($path)) {
+            abort(404, 'Файл шаблона не найден');
+        }
+
+        return Storage::disk('public')->download($path, 'events_import_template.xlsx');
+    }
 
 
 

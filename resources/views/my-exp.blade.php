@@ -20,6 +20,13 @@
                     <input type="file" name="file" class="form-control">
                     <button type="submit" class="btn btn-primary mt-2">Загрузить Excel</button>
                 </form>
+
+                <div class="mb-3">
+                    <a href="{{ route('events.template') }}" class="text-sm text-blue-600 underline">
+                        Скачать образец файла (.xlsx)
+                    </a>
+                </div>
+
             </div>
 
             <div class="relative">
