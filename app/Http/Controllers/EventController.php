@@ -275,10 +275,12 @@ class EventController extends Controller
 
         try {
             $import = new EventsImport;
-            $import->import($request->file['file']);
+            $import->import($request->file('file'));
 
             if (count($import->failures) > 0) {
-                return back()->with('import_failures', $import->failures);
+                return back()
+                    ->with('import_failures', $import->failures)
+                    ->with('warning', 'Импорт завершен, но в некоторых строках были ошибки.');
             }
 
             return back()->with('success', 'Все мероприятия успешно импортированы');

@@ -6,6 +6,7 @@ use App\Models\Content;
 use App\Models\ContentType;
 use App\Models\Event;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
@@ -20,11 +21,21 @@ class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatch
     use Importable;
 
     public array $failures = [];
+    protected Collection $contentTypes;
+
+    public function __construct()
+    {
+        $this->contentTypes = ContentType::all()->keyBy('name');
+    }
 
     public function model(array $row): ?Model
     {
         return DB::transaction(function () use ($row) {
-            $contentType = ContentType::where('slug', $row['type'])->first();
+            $contentType = $this->contentTypes->get($row['type']);
+
+            if (!$contentType) {
+                return null;
+            }
 
             $content = Content::firstOrCreate(
                 [
@@ -46,7 +57,14 @@ class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatch
     public function rules(): array
     {
         return [
-            'type' => 'required|exists:content_types,slug',
+            'type' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (!$this->contentTypes->has($value)) {
+                        $fail("Тип контента '$value' не существует.");
+                    }
+                },
+                ],
             'content_name' => 'required|string|max:255',
             'rating' => 'nullable|numeric|min:0|max:10',
             'review' => 'nullable|string',
