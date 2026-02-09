@@ -15,57 +15,7 @@
                     </svg>
                 </a>
 
-
-
-                {{-- Сообщение об успешном завершении --}}
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Успех!</strong> {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                {{-- Предупреждение, если часть данных не загрузилась --}}
-                @if(session('warning'))
-                    <div class="alert alert-warning" role="alert">
-                        {{ session('warning') }}
-                    </div>
-                @endif
-
-                {{-- Детальный список ошибок из файла --}}
-                @if(session()->has('import_failures'))
-                    <div class="alert alert-danger shadow-sm">
-                        <h5 class="alert-heading">Ошибки в строках:</h5>
-                        <hr>
-                        <div style="max-height: 200px; overflow-y: auto;">
-                            <ul class="mb-0">
-                                @foreach(session()->get('import_failures') as $failure)
-                                    <li>
-                                        <strong>Строка {{ $failure->row() }}:</strong>
-                                        @foreach($failure->errors() as $error)
-                                            <span>{{ $error }}</span>
-                                        @endforeach
-                                        <small class="text-muted">(Данные: {{ implode(', ', $failure->values()) }})</small>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                @endif
-
-
-
-                <form action="{{ route('events.importByXlsx') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="file" name="file" class="form-control">
-                    <button type="submit" class="btn btn-primary mt-2">Загрузить Excel</button>
-                </form>
-
-                <div class="mb-3">
-                    <a href="{{ route('events.template') }}" class="text-sm text-blue-600 underline">
-                        Скачать образец файла (.xlsx)
-                    </a>
-                </div>
+                @include('event.import.block')
 
             </div>
 
