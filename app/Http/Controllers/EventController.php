@@ -75,7 +75,7 @@ class EventController extends Controller
 
         $contentTypes = ContentType::all();
 
-        return view('my-exp', compact('events', 'contentTypes'));
+        return view('events.index', compact('events', 'contentTypes'));
     }
 
     /**
@@ -89,7 +89,7 @@ class EventController extends Controller
             $contentTypeOptions[] = (object)['name' => $contentType->name, 'value' => $contentType->id];
         }
 
-        return view('event.edit', compact('contentTypeOptions'));
+        return view('events.edit', compact('contentTypeOptions'));
     }
 
     /**
@@ -163,7 +163,7 @@ class EventController extends Controller
             'content.contentType'
         ])->find($id);
 
-        return view('event.edit', compact('event', 'contentTypeOptions'));
+        return view('events.edit', compact('event', 'contentTypeOptions'));
     }
 
     /**
