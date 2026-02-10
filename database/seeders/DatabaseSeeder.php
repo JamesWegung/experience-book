@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([RoleSeeder::class]);
         $this->createBasicContentTypes();
         $this->createTestUser();
     }
@@ -57,6 +59,8 @@ class DatabaseSeeder extends Seeder
             'email' => env('TEST_USER_EMAIL'),
             'password' => env('TEST_USER_PASSWORD')
         ]);
+
+        $user->assignRole('admin');
 
         Event::factory(10)->for($user)->create();
     }
