@@ -7,7 +7,7 @@ use App\Http\Controllers\TelegramLinkController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('dashboard');
+    return redirect()->route('overview.index');
 });
 
 Route::get('/dashboard', function () {
