@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Event;
 
+use App\Http\Controllers\Controller;
 use App\Imports\EventsImport;
 use App\Models\Content;
 use App\Models\ContentType;
@@ -19,9 +20,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EventController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $sort = request('sort', 'created_at');
@@ -78,9 +77,6 @@ class EventController extends Controller
         return view('events.index', compact('events', 'contentTypes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         $contentTypes = ContentType::take(10)->get();
@@ -92,9 +88,6 @@ class EventController extends Controller
         return view('events.edit', compact('contentTypeOptions'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedDataForContent = $request->validate([
@@ -140,17 +133,7 @@ class EventController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $contentTypes = ContentType::take(10)->get();
