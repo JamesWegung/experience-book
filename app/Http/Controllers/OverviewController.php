@@ -12,7 +12,8 @@ class OverviewController extends Controller
     {
         $userId = auth()->id();
         $stats = Event::getContentTypeStats($userId)->get();
+        $recentItems = Event::latest()->take(5)->get();
 
-        return view('overview.index', compact('stats'));
+        return view('overview.index', compact('stats', 'recentItems'));
     }
 }
