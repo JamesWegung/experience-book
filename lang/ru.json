@@ -26,5 +26,9 @@
     "Overview": "Обзор",
     "Telegram": "Телеграм-аккаунт",
     "Linked": "Привязан",
-    "Not linked": "Не привязан"
+    "Not linked": "Не привязан",
+    "Load": "Загрузить",
+    "Template": "Шаблон",
+    "Import": "Импорт",
+    "Success": "Успех"
 }
