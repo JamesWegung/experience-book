@@ -8,8 +8,8 @@ use App\Models\Content;
 use App\Models\ContentType;
 use App\Models\Event;
 use App\Services\Event\EventsImport;
-use Carbon\Carbon;
 use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class EventController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(Request $request): Factory|View
     {
         $events = \auth()->user()
             ->events()
@@ -54,21 +54,14 @@ class EventController extends Controller
     {
         try {
             DB::transaction(function () use ($request) {
-                $content = Content::firstOrCreate(
-                    [
-                        'name' => $request->content_name,
-                        'content_type_id' => $request->content_type_id,
-                    ]
-                );
-
-                $completedAt = Carbon::parse($request->completed_date);
+                $content = Content::firstOrCreate($request->validated());
 
                 Event::create([
                     'user_id' => auth()->id(),
                     'content_id' => $content->id,
                     'rating' => $request->rating,
                     'review' => $request->review,
-                    'completed_at' => $completedAt,
+                    'completed_at' => $request->completed_date,
                 ]);
             });
 
@@ -80,7 +73,7 @@ class EventController extends Controller
     }
 
 
-    public function edit(string $id)
+    public function edit(string $id): Factory|View
     {
         $contentTypes = ContentType::take(10)->get();
         $contentTypeOptions = [];
@@ -98,42 +91,15 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreEventRequest $request, Event $event): RedirectResponse
     {
-        $event = Event::find($id);
-
-        $validatedDataForContent = $request->validate([
-            'content_type_id' => 'required|numeric',
-            'content_name' => 'required|string|max:255'
-        ]);
-
-        $contentData = [
-            'name' => $validatedDataForContent['content_name'],
-            'content_type_id' => $validatedDataForContent['content_type_id'],
-            'user_id' => auth()->id()
-        ];
-
-        $validatedDataForEvent = $request->validate([
-            'rating' => 'numeric|max:10',
-            'review' => 'string|nullable',
-            'completed_date' => 'date',
-            'completed_time' => 'date_format:H:i'
-        ]);
-
         try {
-            DB::transaction(function () use ($validatedDataForEvent, $contentData, $event) {
-                $content = Content::where(['name' => $contentData['name'], 'content_type_id' => $contentData['content_type_id']])->first();
+            DB::transaction(function () use ($event, $request) {
+                $content = Content::firstOrCreate($request->validated());
 
-                if (!$content) {
-                    $content = Content::create($contentData);
-                }
+                $data = array_merge($content->id, $request->validated());
 
-                $completedAt = Carbon::parse($validatedDataForEvent['completed_date']);
-
-                $validatedDataForEvent['completed_at'] = $completedAt;
-                $validatedDataForEvent['content_id'] = $content->id;
-
-                $event->update($validatedDataForEvent);
+                $event->update($data);
             });
 
             return redirect()->route('events.index');
@@ -145,7 +111,7 @@ class EventController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): RedirectResponse
     {
         $event = Event::find($id);
 

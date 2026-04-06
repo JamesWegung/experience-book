@@ -10,7 +10,7 @@ class StoreEventRequest extends FormRequest
     {
         return [
             'content_type_id' => 'required|numeric',
-            'content_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'rating' => 'numeric|max:10',
             'review' => 'string|nullable',
             'completed_date' => 'date',
