@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Event;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Event\StoreEventRequest;
-use App\Imports\EventsImport;
 use App\Models\Content;
 use App\Models\ContentType;
 use App\Models\Event;
+use App\Services\Event\EventsImport;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Imports;
+namespace App\Services\Event;
 
 use App\Models\Content;
 use App\Models\ContentType;
