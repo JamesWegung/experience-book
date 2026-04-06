@@ -26,11 +26,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/api/events/autocomplete', [EventController::class, 'autocomplete']);
-});
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/api/telegram/generate-token', [TelegramLinkController::class, 'generateToken']);
 });
 
 

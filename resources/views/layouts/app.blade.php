@@ -13,9 +13,8 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @if(isset($scripts))
-            {{ $scripts }}
-        @endif
+
+        @stack('scripts')
 
         @if(isset($style))
             {{ $style }}
