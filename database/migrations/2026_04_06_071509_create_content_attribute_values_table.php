@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attribute_values', function (Blueprint $table) {
+        Schema::create('content_attribute_values', function (Blueprint $table) {
             $table->id();
             $table->foreignId('content_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('attribute_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('content_attribute_id')->constrained()->cascadeOnDelete();
             $table->text('value');
             $table->timestamps();
 
-            $table->unique(['content_id', 'attribute_id'], 'content_attribute_unique');
+            $table->unique(['content_id', 'content_attribute_id'], 'content_content_attribute_unique');
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attribute_values');
+        Schema::dropIfExists('content_attribute_values');
     }
 };

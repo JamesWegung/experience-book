@@ -13,9 +13,9 @@
                 {{ $event->content->name }}
             </h3>
 
-            @if($event->content->attributeValues->isNotEmpty())
+            @if($event->content->contentAttributeValues->isNotEmpty())
                 <div class="text-sm text-gray-500">
-                    {{ $event->content->attributeValues->map(fn($av) => "{$av->attribute->name}: {$av->value}")->implode(', ') }}
+                    {{ $event->content->contentAttributeValues->map(fn($av) => "{$av->contentAttribute->name}: {$av->value}")->implode(', ') }}
                 </div>
             @endif
 

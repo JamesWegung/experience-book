@@ -41,12 +41,12 @@
                                 </x-select>
 
                                 <div id="dynamic-attributes" class="mt-4 space-y-4">
-                                    @if(isset($event) && $event->content->attributeValues)
-                                        @foreach($event->content->attributeValues as $val)
+                                    @if(isset($event) && $event->content->contentAttributeValues)
+                                        @foreach($event->content->contentAttributeValues as $val)
                                             <div class="mb-4">
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ $val->attribute->name }}</label>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ $val->contentAttribute->name }}</label>
                                                 <input type="text"
-                                                       name="custom_attributes[{{ $val->attribute_id }}]"
+                                                       name="custom_attributes[{{ $val->content_attribute_id }}]"
                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                                                        value="{{ $val->value }}"
                                                        placeholder="Введите значение"

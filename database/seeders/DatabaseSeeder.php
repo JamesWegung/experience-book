@@ -2,14 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Attribute;
-use App\Models\Content;
+use App\Models\ContentAttribute;
 use App\Models\ContentType;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -64,7 +62,7 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
-        Attribute::insert($data);
+        ContentAttribute::insert($data);
     }
 
     private function createTestUser(): void

@@ -28,9 +28,9 @@ class Content extends Model
         return $this->hasMany(Event::class);
     }
 
-    public function attributeValues(): HasMany
+    public function contentAttributeValues(): HasMany
     {
-        return $this->hasMany(AttributeValue::class);
+        return $this->hasMany(ContentAttributeValue::class);
     }
 
 }

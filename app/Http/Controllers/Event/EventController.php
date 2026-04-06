@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Event;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Event\StoreEventRequest;
-use App\Models\AttributeValue;
+use App\Models\ContentAttributeValue;
 use App\Models\Content;
 use App\Models\ContentType;
 use App\Models\Event;
@@ -23,7 +23,7 @@ class EventController extends Controller
             ->events()
             ->with([
                 'content.contentType',
-                'content.attributeValues.attribute',
+                'content.contentAttributeValues.contentAttribute',
             ])
             ->filter($request)
             ->paginate(15)
@@ -53,20 +53,18 @@ class EventController extends Controller
                 $contentData = $request->safe()->only(['name', 'description', 'content_type_id']);
                 $content = Content::firstOrCreate($contentData);
 
+                $contentAttributes = $request->input('custom_attributes', []);
 
-                $customAttributes = $request->input('custom_attributes', []);
-
-                foreach ($customAttributes as $attributeId => $value) {
+                foreach ($contentAttributes as $attributeId => $value) {
                     if (!is_null($value) && $value !== '') {
-                        AttributeValue::updateOrCreate([
+                        ContentAttributeValue::updateOrCreate([
                             'content_id' => $content->id,
-                            'attribute_id' => $attributeId,
+                            'content_attribute_id' => $attributeId,
                         ],
                         ['value' => $value]
                         );
                     }
                 }
-
 
                 Event::create([
                     'user_id' => auth()->id(),
@@ -93,7 +91,8 @@ class EventController extends Controller
         }
 
         $event = Event::with([
-            'content.contentType'
+            'content.contentType',
+            'content.contentAttributeValues.contentAttribute',
         ])->find($id);
 
         return view('events.edit', compact('event', 'contentTypeOptions'));
@@ -113,20 +112,20 @@ class EventController extends Controller
                     'completed_at' => $request->completed_at,
                 ]);
 
-                $customAttributes = $request->input('custom_attributes', []);
+                $contentAttributes = $request->input('custom_attributes', []);
 
-                foreach ($customAttributes as $attributeId => $value) {
+                foreach ($contentAttributes as $attributeId => $value) {
                     if (!is_null($value) && $value !== '') {
-                        AttributeValue::updateOrCreate(
+                        ContentAttributeValue::updateOrCreate(
                             [
                                 'content_id'   => $content->id,
-                                'attribute_id' => $attributeId,
+                                'content_attribute_id' => $attributeId,
                             ],
                             ['value' => $value]
                         );
                     } else {
-                        AttributeValue::where('content_id', $content->id)
-                            ->where('attribute_id', $attributeId)
+                        ContentAttributeValue::where('content_id', $content->id)
+                            ->where('content_attribute_id', $attributeId)
                             ->delete();
                     }
                 }
