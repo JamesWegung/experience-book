@@ -18,5 +18,9 @@ class ContentType extends Model
         return $this->hasMany(Content::class);
     }
 
+    public function attributes(): HasMany
+    {
+        return $this->hasMany(Attribute::class);
+    }
 
 }

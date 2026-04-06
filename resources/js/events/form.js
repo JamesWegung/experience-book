@@ -1,4 +1,4 @@
-export function initEventForm() {
+function initContentNameAutocomplete() {
     const contentInput = document.getElementById('content_name');
     const resultsContainer = document.getElementById('autocomplete-results');
     let timeoutId;
@@ -116,4 +116,40 @@ export function initEventForm() {
     }
 }
 
-initEventForm();
+function initCustomAttributes() {
+    console.log('Доп. атрибуты...');
+
+    document.querySelector('select[name="content_type_id"]').addEventListener('change', async (e) => {
+        const typeId = e.target.value;
+        const container = document.getElementById('dynamic-attributes');
+
+        if (!typeId) {
+            container.innerHTML = '';
+            return;
+        }
+
+        try {
+            const { data: { data: attributes} } = await axios.get(`/api/content-types/${typeId}/attributes`);
+
+            container.innerHTML = attributes.map(attr => `
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">${attr.name}</label>
+                    <input type="text"
+                           name="custom_attributes[${attr.id}]"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="Введите значение"
+                           autocomplete="off">
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Ошибка при загрузке атрибутов: ', error);
+            container.innerHTML = '<p class="text-red-500 text-sm">Не удалось загрузить дополнительные поля</p>';
+        }
+
+
+
+    });
+}
+
+initContentNameAutocomplete();
+initCustomAttributes();
