@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Event;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Event\StoreEventRequest;
 use App\Imports\EventsImport;
 use App\Models\Content;
 use App\Models\ContentType;
@@ -21,60 +22,21 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class EventController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $sort = request('sort', 'created_at');
-        $order = request('order', 'desc');
-        $searchStr = request('search');
-        $selectedCategories = is_array(request('categories'))
-            ? request('categories')
-            : (request('categories') ? explode(',', request('categories')) : []);
-
         $events = \auth()->user()
             ->events()
             ->with([
                 'content.contentType',
             ])
-            ->when(!empty($selectedCategories), function ($q) use ($selectedCategories) {
-                return $q->whereHas('content.contentType', function ($query) use ($selectedCategories) {
-                    $query->whereIn('id', $selectedCategories);
-                });
-            })
-            ->when(!empty($searchStr), function ($q) use ($searchStr){
-                return $q->where(function ($q) use ($searchStr) {
-                    $q->whereHas('content', function ($q) use ($searchStr) {
-                        $q->where('name', 'LIKE', "%$searchStr%")
-                            ->orWhere('description', 'LIKE', "%$searchStr%");
-                    })
-                    ->orWhere('review', 'LIKE', "%$searchStr%");
-                });
-            })
-            ->when($sort === 'rating', function ($q) use ($order) {
-                return $q->orderBy('rating', $order);
-            })
-            ->when($sort === 'created_at', function ($q) use ($order) {
-                return $q->orderBy('created_at', $order);
-            })
-            ->when($sort === 'completed_at', function ($q) use ($order) {
-                if ($order === 'asc') {
-                    return $q->orderByRaw('CASE WHEN completed_at IS NULL THEN 1 ELSE 0 END')
-                        ->orderBy('completed_at', 'asc');
-                } else {
-                    return $q->orderByRaw('CASE WHEN completed_at IS NULL THEN 0 ELSE 1 END')
-                        ->orderBy('completed_at', 'desc');
-                }
-            })
-            ->when($sort === 'content_type', function ($q) use ($order) {
-                return $q->join('contents', 'events.content_id', '=', 'contents.id')
-                    ->join('content_types', 'contents.content_type_id', '=', 'content_types.id')
-                    ->orderBy('content_types.name', $order)
-                    ->select('events.*');
-            })
-            ->paginate(15);
+            ->filter($request)
+            ->paginate(15)
+            ->withQueryString();
 
-        $contentTypes = ContentType::all();
-
-        return view('events.index', compact('events', 'contentTypes'));
+        return view('events.index', [
+            'events' => $events,
+            'contentTypes' => ContentType::all(),
+        ]);
     }
 
     public function create(): View
@@ -88,42 +50,26 @@ class EventController extends Controller
         return view('events.edit', compact('contentTypeOptions'));
     }
 
-    public function store(Request $request)
+    public function store(StoreEventRequest $request): RedirectResponse
     {
-        $validatedDataForContent = $request->validate([
-            'content_type_id' => 'required|numeric',
-            'content_name' => 'required|string|max:255'
-        ]);
-
-        $contentData = [
-            'name' => $validatedDataForContent['content_name'],
-            'content_type_id' => $validatedDataForContent['content_type_id'],
-            'user_id' => auth()->id()
-        ];
-
-        $validatedDataForEvent = $request->validate([
-            'rating' => 'numeric|max:10',
-            'review' => 'string|nullable',
-            'completed_date' => 'date',
-            'completed_time' => 'date_format:H:i'
-        ]);
-
         try {
-            DB::transaction(function () use ($validatedDataForEvent, $contentData) {
+            DB::transaction(function () use ($request) {
                 $content = Content::firstOrCreate(
                     [
-                        'name' => $contentData['name'],
-                        'content_type_id' => $contentData['content_type_id']
+                        'name' => $request->content_name,
+                        'content_type_id' => $request->content_type_id,
                     ]
                 );
 
-                $completedAt = Carbon::parse($validatedDataForEvent['completed_date']);
+                $completedAt = Carbon::parse($request->completed_date);
 
-                $validatedDataForEvent['completed_at'] = $completedAt;
-                $validatedDataForEvent['user_id'] = auth()->user()->id;
-                $validatedDataForEvent['content_id'] = $content->id;
-
-                Event::create($validatedDataForEvent);
+                Event::create([
+                    'user_id' => auth()->id(),
+                    'content_id' => $content->id,
+                    'rating' => $request->rating,
+                    'review' => $request->review,
+                    'completed_at' => $completedAt,
+                ]);
             });
 
             return redirect()->route('events.index')->with('success', 'Запись добавлена!');
