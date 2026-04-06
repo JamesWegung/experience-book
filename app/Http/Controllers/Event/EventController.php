@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Event;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Event\StoreEventRequest;
+use App\Models\AttributeValue;
 use App\Models\Content;
 use App\Models\ContentType;
 use App\Models\Event;
@@ -28,6 +29,7 @@ class EventController extends Controller
             ->events()
             ->with([
                 'content.contentType',
+                'content.attributeValues.attribute',
             ])
             ->filter($request)
             ->paginate(15)
@@ -54,14 +56,30 @@ class EventController extends Controller
     {
         try {
             DB::transaction(function () use ($request) {
-                $content = Content::firstOrCreate($request->validated());
+                $contentData = $request->safe()->only(['name', 'description', 'content_type_id']);
+                $content = Content::firstOrCreate($contentData);
+
+
+                $customAttributes = $request->input('custom_attributes', []);
+
+                foreach ($customAttributes as $attributeId => $value) {
+                    if (!is_null($value) && $value !== '') {
+                        AttributeValue::updateOrCreate([
+                            'content_id' => $content->id,
+                            'attribute_id' => $attributeId,
+                        ],
+                        ['value' => $value]
+                        );
+                    }
+                }
+
 
                 Event::create([
                     'user_id' => auth()->id(),
                     'content_id' => $content->id,
                     'rating' => $request->rating,
                     'review' => $request->review,
-                    'completed_at' => $request->completed_date,
+                    'completed_at' => $request->completed_at,
                 ]);
             });
 
@@ -95,11 +113,33 @@ class EventController extends Controller
     {
         try {
             DB::transaction(function () use ($event, $request) {
-                $content = Content::firstOrCreate($request->validated());
+                $contentData = $request->safe()->only(['name', 'description', 'content_type_id']);
+                $content = Content::firstOrCreate($contentData);
 
-                $data = array_merge($content->id, $request->validated());
+                $event->update([
+                    'content_id'   => $content->id,
+                    'rating'       => $request->rating,
+                    'review'       => $request->review,
+                    'completed_at' => $request->completed_at,
+                ]);
 
-                $event->update($data);
+                $customAttributes = $request->input('custom_attributes', []);
+
+                foreach ($customAttributes as $attributeId => $value) {
+                    if (!is_null($value) && $value !== '') {
+                        AttributeValue::updateOrCreate(
+                            [
+                                'content_id'   => $content->id,
+                                'attribute_id' => $attributeId,
+                            ],
+                            ['value' => $value]
+                        );
+                    } else {
+                        AttributeValue::where('content_id', $content->id)
+                            ->where('attribute_id', $attributeId)
+                            ->delete();
+                    }
+                }
             });
 
             return redirect()->route('events.index');

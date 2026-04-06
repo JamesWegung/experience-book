@@ -13,8 +13,9 @@ class StoreEventRequest extends FormRequest
             'name' => 'required|string|max:255',
             'rating' => 'numeric|max:10',
             'review' => 'string|nullable',
-            'completed_date' => 'date',
-            'completed_time' => 'date_format:H:i',
+            'completed_at' => 'date',
+            'custom_attributes' => 'nullable|array',
+            'custom_attributes.*' => 'nullable|string|max:1000',
         ];
     }
 }

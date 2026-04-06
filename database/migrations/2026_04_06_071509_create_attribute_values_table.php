@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('attribute_id')->constrained()->cascadeOnDelete();
             $table->text('value');
             $table->timestamps();
+
+            $table->unique(['content_id', 'attribute_id'], 'content_attribute_unique');
         });
     }
 
