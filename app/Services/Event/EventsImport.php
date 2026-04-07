@@ -30,13 +30,9 @@ class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatch
 
     public function model(array $row): ?Model
     {
-        return DB::transaction(function () use ($row) {
-            $contentType = $this->contentTypes->get($row['type']);
+        $contentType = $this->contentTypes->get($row['type']);
 
-            if (!$contentType) {
-                return null;
-            }
-
+        return DB::transaction(function () use ($row, $contentType) {
             $content = Content::firstOrCreate(
                 [
                     'name' => $row['content_name'],
@@ -49,7 +45,7 @@ class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatch
                 'content_id' => $content->id,
                 'rating' => $row['rating'] ?? 0,
                 'review' => $row['review'] ?? null,
-                'completed_at' => date('d-m-Y H:i:s')
+                'completed_at' => now(),
             ]);
         });
     }
@@ -69,6 +65,7 @@ class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatch
             'content_name' => 'required|string|max:255',
             'rating' => 'nullable|numeric|min:0|max:10',
             'review' => 'nullable|string',
+            'author' => 'nullable|string',
         ];
     }
 
@@ -82,5 +79,22 @@ class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatch
     public function batchSize(): int
     {
         return 100;
+    }
+
+    protected function saveContentAttributesValues(Content $content, ContentType $contentType, array $row): void
+    {
+        foreach ($contentType->contentAttributes as $attribute) {
+            $slug = $attribute->slug;
+
+            if (!empty($row[$slug])) {
+                $content->contentAttributeValues()->updateOrCreate(
+                    [
+                        'content_id' => $content->id,
+                        'content_attribute_id' => $attribute->id
+                    ],
+                    ['value' => $row[$slug]]
+                );
+            }
+        }
     }
 }
