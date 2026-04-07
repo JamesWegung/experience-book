@@ -15,7 +15,7 @@
                     </svg>
                 </a>
 
-                @include('events.import.block')
+                @include('events.partials.import-block')
 
             </div>
 
@@ -145,13 +145,11 @@
         </div>
     </div>
 
-    @if(!$events->isEmpty())
-        @foreach($events as $event)
-            <x-event :event="$event"/>
-        @endforeach
-    @else
+    @forelse($events as $event)
+        @include('events.partials.card', ['event' => $event])
+    @empty
         <p>Пусто</p>
-    @endif
+    @endforelse
 
     @push('scripts')
         @vite('resources/js/events/filter.js')
