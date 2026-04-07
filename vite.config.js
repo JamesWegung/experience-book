@@ -8,6 +8,7 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/js/events/form.js',
+                'resources/js/events/filter.js',
             ],
             refresh: true,
         }),
