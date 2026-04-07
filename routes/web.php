@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('events/export-template', EventDownloadTemplate::class)->name('events.template');
     Route::post('events/import-by-xlsx', EventImportFromExcel::class)->name('events.importByXlsx');
-    Route::post('events/export-by-xlsx', EventExportToExcel::class)->name('events.exportByXlsx');
+    Route::get('events/export-by-xlsx', EventExportToExcel::class)->name('events.exportByXlsx');
     Route::resource('events', EventController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
