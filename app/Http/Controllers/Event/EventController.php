@@ -84,18 +84,17 @@ class EventController extends Controller
 
     public function edit(string $id): Factory|View
     {
-        $contentTypes = ContentType::take(10)->get();
-        $contentTypeOptions = [];
-        foreach ($contentTypes as $contentType) {
-            $contentTypeOptions[] = (object)['name' => $contentType->name, 'value' => $contentType->id];
-        }
-
         $event = Event::with([
             'content.contentType',
             'content.contentAttributeValues.contentAttribute',
-        ])->find($id);
+        ])->findOrFail($id);
 
-        return view('events.edit', compact('event', 'contentTypeOptions'));
+        $contentTypeOptions = ContentType::take(10)->get(['id as value', 'name']);
+
+        $availableAttributes = $event->content->contentType->contentAttributes;
+        $currentValues = $event->content->contentAttributeValues->keyBy('content_attribute_id');
+
+        return view('events.edit', compact('event', 'contentTypeOptions', 'availableAttributes', 'currentValues'));
     }
 
     public function update(StoreEventRequest $request, Event $event): RedirectResponse
