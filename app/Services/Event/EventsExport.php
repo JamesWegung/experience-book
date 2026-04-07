@@ -45,7 +45,7 @@ class EventsExport implements FromQuery, WithMapping, WithHeadings
         $values = $event->content->contentAttributeValues->keyBy('content_attribute_id');
 
         foreach ($this->attributes as $attribute) {
-            $row[] = $values->has($attribute->id) ? $values->get($attribute->id)->value : '-';
+            $row[] = $values->has($attribute->id) ? $values->get($attribute->id)->value : '';
         }
 
         return $row;
