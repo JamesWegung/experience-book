@@ -11,6 +11,7 @@ class ImportFromExcelController extends Controller
 {
     public function __invoke(ImportFromExcelRequest $request)
     {
+
         try {
             $import = new EventsImport;
             $import->import($request->file('file'));

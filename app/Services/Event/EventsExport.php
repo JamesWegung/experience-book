@@ -27,7 +27,7 @@ class EventsExport implements FromQuery, WithMapping, WithHeadings
     {
         $staticHeaders = ['Тип', 'Название', 'Оценка', 'Отзыв', 'Дата завершения'];
 
-        $dynamicHeaders = $this->attributes->pluck('slug')->toArray();
+        $dynamicHeaders = $this->attributes->pluck('name')->toArray();
 
         return array_merge($staticHeaders, $dynamicHeaders);
     }

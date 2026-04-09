@@ -3,6 +3,7 @@
 namespace App\Services\Event;
 
 use App\Models\Content;
+use App\Models\ContentAttribute;
 use App\Models\ContentType;
 use App\Models\Event;
 use Illuminate\Database\Eloquent\Model;
@@ -22,10 +23,15 @@ class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatch
 
     public array $failures = [];
     protected Collection $contentTypes;
+    protected Collection $attributeMap;
 
     public function __construct()
     {
         $this->contentTypes = ContentType::all()->keyBy('name');
+
+        $this->attributeMap = ContentAttribute::all()->mapWithKeys(function ($attr) {
+            return [str($attr->name)->slug('_')->toString() => $attr->slug];
+        });
     }
 
     public function model(array $row): ?Model
@@ -48,6 +54,34 @@ class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatch
                 'completed_at' => now(),
             ]);
         });
+    }
+
+    public function map($row): array
+    {
+        $mappedRow = [];
+
+        $staticMap = [
+            'tip' => 'type',
+            'nazvanie' => 'content_name',
+            'ocenka' => 'rating',
+            'otzyv' => 'review'
+        ];
+
+        foreach ($row as $key => $value) {
+            if (isset($staticMap[$key])) {
+                $mappedRow[$staticMap[$key]] = $value;
+                continue;
+            }
+
+            if ($this->attributeMap->has($key)) {
+                $realSlug = $this->attributeMap->get($key);
+                $mappedRow[$realSlug] = $value;
+            } else {
+                $mappedRow[$key] = $value;
+            }
+        }
+
+        return $mappedRow;
     }
 
 
@@ -84,15 +118,16 @@ class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatch
     protected function saveContentAttributesValues(Content $content, ContentType $contentType, array $row): void
     {
         foreach ($contentType->contentAttributes as $attribute) {
-            $slug = $attribute->slug;
+            $rusName = mb_strtolower($attribute->name);
+            $excelKey = str($rusName)->slug('_')->toString();
 
-            if (!empty($row[$slug])) {
+            if (!empty($row[$excelKey])) {
                 $content->contentAttributeValues()->updateOrCreate(
                     [
                         'content_id' => $content->id,
                         'content_attribute_id' => $attribute->id
                     ],
-                    ['value' => $row[$slug]]
+                    ['value' => $row[$excelKey]]
                 );
             }
         }
