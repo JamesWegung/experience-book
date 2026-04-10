@@ -14,10 +14,11 @@ use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Validators\Failure;
 
-class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatchInserts, SkipsOnFailure
+class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatchInserts, SkipsOnFailure, WithMapping
 {
     use Importable;
 
@@ -64,7 +65,8 @@ class EventsImport implements ToModel, WithHeadingRow, WithValidation, WithBatch
             'tip' => 'type',
             'nazvanie' => 'content_name',
             'ocenka' => 'rating',
-            'otzyv' => 'review'
+            'otzyv' => 'review',
+            'avtor' => 'author',
         ];
 
         foreach ($row as $key => $value) {
