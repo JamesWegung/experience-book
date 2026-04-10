@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->collation('utf8mb4_unicode_ci');
+            $table->string('name');
             $table->string('description')->nullable();
             $table->foreignId('content_type_id')->constrained();
             $table->boolean('is_common')->default(0);
