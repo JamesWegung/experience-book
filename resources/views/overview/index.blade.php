@@ -45,7 +45,7 @@
             </div>
 
             <!-- Последние добавленные -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 px-4">
+            {{--<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 px-4">
                 <div class="bg-white shadow sm:rounded-lg p-6">
                     <h4 class="text-lg font-medium text-gray-900 mb-4 border-b pb-2">
                         {{ __('overview.recent-added') }}
@@ -67,8 +67,7 @@
                         <a href="{{ route('events.index') }}" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">{{ __('overview.show-all') }} →</a>
                     </div>
                 </div>
-
-            </div>
+            </div>--}}
 
         </div>
     </div>
