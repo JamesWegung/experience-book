@@ -10,12 +10,12 @@
                     class="inline-flex items-center p-3 border border-transparent rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                     title="Добавить новое мероприятие"
                 >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
                 </a>
 
-                @include('events.import.block')
+                @include('events.partials.import-block')
 
             </div>
 
@@ -29,7 +29,7 @@
                             class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 transition-colors duration-200"
                         >
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="h-5 w-5 text-gray-400" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
@@ -42,60 +42,13 @@
                         class="hidden p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
                         title="Очистить поиск"
                     >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                     </button>
                 </div>
             </div>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const searchInput = document.getElementById('searchInput');
-                    const clearSearch = document.getElementById('clearSearch');
-
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const searchQuery = urlParams.get('search');
-                    if (searchQuery) {
-                        searchInput.value = searchQuery;
-                        clearSearch.classList.remove('hidden');
-                    }
-
-                    searchInput.addEventListener('keypress', function (e) {
-                        if (e.key === 'Enter') {
-                            performSearch(e.target.value.trim());
-                        }
-                    });
-
-                    clearSearch.addEventListener('click', function () {
-                        searchInput.value = '';
-                        clearSearch.classList.add('hidden');
-                        performSearch('');
-                    });
-
-                    function performSearch(query) {
-                        const url = new URL(window.location.href);
-
-                        if (query) {
-                            url.searchParams.set('search', query);
-                        } else {
-                            url.searchParams.delete('search');
-                        }
-
-                        url.searchParams.delete('page');
-
-                        window.location.href = url.toString();
-                    }
-
-                    document.addEventListener('keydown', function (e) {
-                        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                            e.preventDefault();
-                            searchInput.focus();
-                        }
-                    });
-                });
-            </script>
         </div>
     </x-slot>
 
@@ -115,7 +68,7 @@
                         <span>{{ request('sort') == 'rating' && request('order') == 'asc' ? 'Сначала низкие' : 'Сначала высокие' }}</span>
                         <svg
                             class="ml-1 h-4 w-4 {{ request('sort') == 'rating' && request('order') == 'asc' ? 'transform rotate-180' : '' }}"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </a>
@@ -133,7 +86,7 @@
                         <span>{{ request('sort') == 'created_at' && request('order') == 'desc' ? 'Сначала новые' : 'Сначала старые' }}</span>
                         <svg
                             class="ml-1 h-4 w-4 {{ request('sort') == 'created_at' && request('order') == 'desc' ? 'transform rotate-180' : '' }}"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </a>
@@ -151,7 +104,7 @@
                         <span>{{ request('sort') == 'completed_at' && request('order') == 'desc' ? 'Сначала новые' : 'Сначала старые' }}</span>
                         <svg
                             class="ml-1 h-4 w-4 {{ request('sort') == 'completed_at' && request('order') == 'desc' ? 'transform rotate-180' : '' }}"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </a>
@@ -173,7 +126,7 @@
                                 ? 'Выбрано: ' . (is_array(request('categories')) ? count(request('categories')) : count(explode(',', request('categories'))))
                                 : 'Все категории' }}
                         </span>
-                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="ml-1 h-4 w-4" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
@@ -192,13 +145,15 @@
         </div>
     </div>
 
-    @if(!$events->isEmpty())
-        @foreach($events as $event)
-            <x-event :event="$event"/>
-        @endforeach
-    @else
+    @forelse($events as $event)
+        @include('events.partials.card', ['event' => $event])
+    @empty
         <p>Пусто</p>
-    @endif
+    @endforelse
+
+    @push('scripts')
+        @vite('resources/js/events/filter.js')
+    @endpush
 
 
 </x-app-layout>

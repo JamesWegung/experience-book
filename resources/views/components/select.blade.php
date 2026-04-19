@@ -9,8 +9,8 @@
 
     <option value="">Выберите тип</option>
 
+    <!-- TODO: Проверить работу old(), возможно оно передает не name, а value -->
     @foreach($options as $option)
-        <!-- TODO: Проверить работу old(), возможно оно передает не name, а value -->
         <option value="{{ $option->value }}" {{ old('content-type', $selected ?? '') == $option->name ? 'selected' : '' }}>{{ $option->name }}</option>
     @endforeach
 

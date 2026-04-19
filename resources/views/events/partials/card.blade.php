@@ -12,6 +12,13 @@
             <h3 class="text-lg font-semibold text-gray-900 mb-3">
                 {{ $event->content->name }}
             </h3>
+
+            @if($event->content->contentAttributeValues->isNotEmpty())
+                <div class="text-sm text-gray-500">
+                    {{ $event->content->contentAttributeValues->map(fn($av) => "{$av->contentAttribute->name}: {$av->value}")->implode(', ') }}
+                </div>
+            @endif
+
             <div class="space-y-3">
                 <div class="flex items-center space-x-1">
                     <span class="text-yellow-500">★</span>

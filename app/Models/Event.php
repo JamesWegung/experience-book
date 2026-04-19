@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Filters\EventFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class Event extends Model
@@ -44,6 +46,11 @@ class Event extends Model
                 DB::raw('count(*) as amount')
             )
             ->groupBy('contents.content_type_id', 'content_types.slug');
+    }
+
+    public function scopeFilter(Builder $query, Request $request): Builder
+    {
+        return (new EventFilter($request))->apply($query);
     }
 
 

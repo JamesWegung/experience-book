@@ -2,13 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Content;
+use App\Models\ContentAttribute;
 use App\Models\ContentType;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,6 +20,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([RoleSeeder::class]);
         $this->createBasicContentTypes();
+        $this->createFirstAttributes();
         $this->createTestUser();
     }
 
@@ -50,6 +50,19 @@ class DatabaseSeeder extends Seeder
         ];
 
         ContentType::insert($data);
+    }
+
+    private function createFirstAttributes(): void
+    {
+        $data = [
+            [
+                'name' => 'Автор',
+                'slug' => 'author',
+                'content_type_id' => 1, // для книг
+            ],
+        ];
+
+        ContentAttribute::insert($data);
     }
 
     private function createTestUser(): void

@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\Event\EventController;
+use App\Http\Controllers\Event\ImportFromExcelController as EventImportFromExcel;
+use App\Http\Controllers\Event\ExportToExcelController as EventExportToExcel;
+use App\Http\Controllers\Event\DownloadTemplateController as EventDownloadTemplate;
 use App\Http\Controllers\OverviewController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TelegramLinkController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,20 +19,14 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/overview', [OverviewController::class, 'index'])->name('overview.index');
 
-    Route::get('events/export-template', [EventController::class, 'downloadTemplate'])->name('events.template');
-
-    Route::post('events/import-by-xlsx', [EventController::class, 'importByXlsx'])->name('events.importByXlsx');
+    Route::get('events/export-template', EventDownloadTemplate::class)->name('events.template');
+    Route::post('events/import-by-xlsx', EventImportFromExcel::class)->name('events.importByXlsx');
+    Route::get('events/export-by-xlsx', EventExportToExcel::class)->name('events.exportByXlsx');
     Route::resource('events', EventController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::get('/api/events/autocomplete', [EventController::class, 'autocomplete']);
-});
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/api/telegram/generate-token', [TelegramLinkController::class, 'generateToken']);
 });
 
 
