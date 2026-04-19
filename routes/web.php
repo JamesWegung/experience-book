@@ -9,7 +9,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('overview.index');
+    return view('guest.index');
 });
 
 Route::get('/dashboard', function () {
