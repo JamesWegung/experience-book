@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([RoleSeeder::class]);
         $this->createBasicContentTypes();
-        $this->createFirstAttributes();
+        $this->call([ContentAttributeSeeder::class]);
         $this->createTestUser();
     }
 
@@ -50,19 +50,6 @@ class DatabaseSeeder extends Seeder
         ];
 
         ContentType::insert($data);
-    }
-
-    private function createFirstAttributes(): void
-    {
-        $data = [
-            [
-                'name' => 'Автор',
-                'slug' => 'author',
-                'content_type_id' => 1, // для книг
-            ],
-        ];
-
-        ContentAttribute::insert($data);
     }
 
     private function createTestUser(): void
