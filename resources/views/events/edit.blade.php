@@ -41,19 +41,21 @@
                                 </x-select>
 
                                 <div id="dynamic-attributes" class="mt-4 space-y-4">
-                                    @foreach($availableAttributes as $attribute)
-                                        <div class="mb-4">
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                {{ $attribute->name }}
-                                            </label>
-                                            <input type="text"
-                                                   name="custom_attributes[{{ $attribute->id }}]"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                                   value="{{ $currentValues->get($attribute->id)->value ?? '' }}"
-                                                   placeholder="Введите значение"
-                                                   autocomplete="off">
-                                        </div>
-                                    @endforeach
+                                    @isset($availableAttributes)
+                                        @foreach($availableAttributes as $attribute)
+                                            <div class="mb-4">
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                                    {{ $attribute->name }}
+                                                </label>
+                                                <input type="text"
+                                                       name="custom_attributes[{{ $attribute->id }}]"
+                                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                                       value="{{ $currentValues->get($attribute->id)->value ?? '' }}"
+                                                       placeholder="Введите значение"
+                                                       autocomplete="off">
+                                            </div>
+                                        @endforeach
+                                    @endisset
                                 </div>
                             </div>
 
